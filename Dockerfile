@@ -8,4 +8,8 @@ RUN npm install
 
 ADD . /app
 
-CMD ["npm","start"]
+RUN apt-get update && \
+    apt-get install -y openssl && \
+    chmod +x ./entrypoint.sh
+
+CMD ["./entrypoint.sh"]

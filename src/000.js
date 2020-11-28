@@ -1,4 +1,6 @@
 const express = require('express')
+const https = require('https');
+const fs = require('fs');
 const app = express()
 const port = 3000
 
@@ -47,4 +49,11 @@ exec('bin/006 ' + JSON.stringify(req.headers), (err, stdout, stderr) => {
 });
 });
 
-app.listen(port, () => console.log(`Rearc quest listening on port ${port}!`))
+const httpsServer = https.createServer({
+  key: fs.readFileSync('/etc/ssl/private/selfsigned.key'),
+  cert: fs.readFileSync('/etc/ssl/certs/selfsigned.crt'),
+}, app);
+
+httpsServer.listen(443, () => {
+    console.log('HTTPS Server running on port 443');
+});

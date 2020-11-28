@@ -1,4 +1,3 @@
-
 resource "aws_lb" "questelb" {
   name               = "questelb"
   internal           = false
@@ -8,8 +7,8 @@ resource "aws_lb" "questelb" {
 }
 resource "aws_lb_target_group" "questelb" {
   name     = "questelb-tg"
-  port     = 80
-  protocol = "HTTP"
+  port     = 443
+  protocol = "HTTPS"
   vpc_id   = data.aws_vpc.main.id
 }
 
@@ -21,4 +20,4 @@ resource "aws_lb_listener" "front_end" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.questelb.arn
   }
-}
+} 

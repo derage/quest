@@ -1,6 +1,10 @@
 version: "3.3"
 services:
   web:
-    image: "docker.pkg.github.com/derage/quest/website:latest"
+    environment:
+      - SECRET_WORD=${website_secret}
+    image: "derage/quest:latest"
+    restart: unless-stopped
     ports:
-      - "80:3000"
+      - "80:80"
+      - "443:443"

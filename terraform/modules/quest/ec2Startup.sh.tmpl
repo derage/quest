@@ -9,6 +9,10 @@ sudo usermod -a -G docker ec2-user
 sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
+mkdir ssl
+echo "${ssl_pem_key}" > ssl/selfsigned.key
+echo "${ssl_cert}" > ssl/selfsigned.crt
+
 (
 cat <<EOF
 version: "3.3"
@@ -16,11 +20,12 @@ services:
   web:
     environment:
       - SECRET_WORD=${website_secret}
-    image: "derage/quest:latest"
+    image: "${docker_image}"
     restart: unless-stopped
+    volumes:
+       - ./ssl:/home/app/cert
     ports:
-      - "80:80"
-      - "443:443"
+      - 443:3000
 EOF
 ) > docker-compose.yml
 

@@ -50,10 +50,10 @@ exec('bin/006 ' + JSON.stringify(req.headers), (err, stdout, stderr) => {
 });
 
 const httpsServer = https.createServer({
-  key: fs.readFileSync('/etc/ssl/private/selfsigned.key'),
-  cert: fs.readFileSync('/etc/ssl/certs/selfsigned.crt'),
+  key: fs.readFileSync('/home/app/cert/selfsigned.key'),
+  cert: fs.readFileSync('/home/app/cert/selfsigned.crt'),
 }, app);
 
-httpsServer.listen(443, () => {
-    console.log('HTTPS Server running on port 443');
+httpsServer.listen(3000, () => {
+    console.log('HTTPS Server running on port 3000');
 });

@@ -6,8 +6,8 @@ resource "aws_launch_template" "quest" {
     associate_public_ip_address = true
     security_groups = [aws_security_group.allow_public.id]
   }
-  user_data = base64encode(templatefile("${path.module}/ec2Startup.sh.tmpl",{ website_secret = var.website_secret }))
-}
+  user_data = base64encode(templatefile("${path.module}/ec2Startup.sh.tmpl",{ docker_image = var.docker_image, website_secret = var.website_secret, ssl_cert = tls_self_signed_cert.questcert.cert_pem, ssl_pem_key = tls_private_key.questkey.private_key_pem }))
+}  
 
 resource "aws_autoscaling_group" "quest" {
   availability_zones = ["us-east-1a"]

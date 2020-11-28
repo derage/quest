@@ -1,8 +1,26 @@
 #!/bin/bash
 
-openssl req -x509 -nodes -days 365 \
-  -subj  "/C=CA/ST=QC/O=Company Inc/CN=example.com" \
-  -newkey rsa:2048 -keyout /etc/ssl/private/selfsigned.key \
-  -out /etc/ssl/certs/selfsigned.crt;
+# if generated cert isnt mounted, generate one.
+if [ ! -f "/home/app/cert/selfsigned.key" ]; then
+  mkdir -p /home/app/cert
+  SAN=${SAN:-localhost}
+  echo "
+  [req]
+  distinguished_name=req
+  [san]
+  subjectAltName=DNS:${SAN}" > config-ssl
+  openssl req \
+          -x509 \
+          -newkey rsa:4096 \
+          -sha256 \
+          -days 3560 \
+          -nodes \
+          -keyout /home/app/cert/selfsigned.key \
+          -out /home/app/cert/selfsigned.crt \
+          -subj '/CN=cafarelli.org' \
+          -extensions san \
+          -config config-ssl
+fi
+
 
 exec npm start

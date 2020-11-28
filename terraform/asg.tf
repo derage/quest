@@ -6,7 +6,7 @@ resource "aws_launch_template" "quest" {
     associate_public_ip_address = true
     security_groups = [aws_security_group.allow_public.id]
   }
-  user_data = filebase64("${path.module}/ec2Startup.sh")
+  user_data = base64encode(templatefile("${path.module}/ec2Startup.sh.tmpl",{ website_secret = var.website_secret }))
 }
 
 resource "aws_autoscaling_group" "bar" {
@@ -14,9 +14,13 @@ resource "aws_autoscaling_group" "bar" {
   desired_capacity   = 1
   max_size           = 1
   min_size           = 1
+  name = "quest-${aws_launch_template.quest.latest_version}"
 
   launch_template {
     id      = aws_launch_template.quest.id
-    version = "$Latest"
+    version = aws_launch_template.quest.latest_version
+  }
+  lifecycle {
+    create_before_destroy = true
   }
 }

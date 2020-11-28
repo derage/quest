@@ -11,6 +11,8 @@ sudo chmod +x /usr/local/bin/docker-compose
 echo 'version: "3.3"
 services:
   web:
+    environment:
+      - SECRET_WORD=${website_secret}
     image: "derage/quest:latest"
     ports:
       - "80:3000"' > docker-compose.yml

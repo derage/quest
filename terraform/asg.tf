@@ -15,6 +15,7 @@ resource "aws_autoscaling_group" "bar" {
   max_size           = 1
   min_size           = 1
   name = "quest-${aws_launch_template.quest.latest_version}"
+  target_group_arns = [aws_lb_target_group.questelb.arn]
 
   launch_template {
     id      = aws_launch_template.quest.id
